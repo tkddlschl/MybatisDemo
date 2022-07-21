@@ -5,8 +5,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-	<context:component-scan base-package="com.example" />
-	<context:property-placeholder location="classpath:dbinfo.properties" />
+	<context:component-scan
+		base-package="com.example" />
+	<context:property-placeholder
+		location="classpath:dbinfo.properties" />
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<property name="driverClassName" value="${db.driverClassName}" />
 		<property name="jdbcUrl" value="${db.url}" />
@@ -14,7 +16,23 @@
 		<property name="password" value="${db.password}" />
 	</bean>
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
-		<constructor-arg ref="hikariConfig"/>
+		<constructor-arg ref="hikariConfig" />
+	</bean>
+
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation"
+			value="classpath:mybatis-config.xml" />
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:mybatis-mapper.xml</value>
+			</list>
+		</property>
 	</bean>
 	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory" />
+	</bean>
+
 </beans>
