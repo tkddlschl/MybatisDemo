@@ -1,14 +1,18 @@
 package com.example;
 
-import java.sql.Connection;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import javax.sql.DataSource;
+import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import com.example.service.CityService;
+import com.example.vo.CityVo;
 
 import lombok.extern.java.Log;
 
@@ -18,17 +22,24 @@ import lombok.extern.java.Log;
 class CityTest {
 
 	@Autowired
-	private DataSource dataSource;
+	private CityService cityService;
 	
 	@Test
-	void test() {
-		try {
-			Connection conn = this.dataSource.getConnection();
-			log.info(conn.toString());
-		}catch(Exception ex) {
-			log.warning(ex.getMessage());
-		}
-		
+	public void test() {
+		assertNotNull(this.cityService);
 	}
 
+	@Disabled @Test
+	public void test1() {
+		CityVo city = this.cityService.selectCity("Seoul");
+		log.info(city.toString());
+	}
+	
+	@Test
+	public void test2() {
+		List<CityVo> city = this.cityService.selectAllCitiesByContryCode("KOR");
+		for(CityVo c : city) {
+			log.info(c.toString());
+		}
+	}
 }
